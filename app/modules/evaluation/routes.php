@@ -27,7 +27,7 @@ $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $sec
             break;   
 			
          case 'timeline':
-            $data = \Project\Evaluation\Models\EvaluationTimeline::find(' evaluation_id = '. $evaluationId .' AND deleted = 0');
+            $data = \Project\Evaluation\Models\EvaluationTimeline::findFirst(' evaluation_id = '. $evaluationId .' AND deleted = 0');
             break;  
 			
          case 'inception-report':
@@ -43,7 +43,7 @@ $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $sec
             break; 
 
          case 'qualitative-assessment':
-            $data = \Project\Evaluation\Models\QaCriteriaSectionRanking::find(' evaluation_id = '. $evaluationId .' AND deleted = 0');
+            $data = \Project\Evaluation\Models\QaCriteriaSectionRanking::findFullDataByEvaluationID( $evaluationId );
             break; 
 
          default:
@@ -91,8 +91,14 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
             break;   
 			
          case 'timeline':
-            $data = \Project\Evaluation\Models\EvaluationTimeline::find(' evaluation_id = '. $evaluationId .' AND deleted = 0');
-            break;  
+
+            $reqData = \json_decode($_POST['form-data'], true ) ;
+
+   			$data = !empty($reqData['timeline_id']) ? 
+				    \Project\Evaluation\Services\EvaluationTimeline::update($reqData) :
+				    \Project\Evaluation\Services\EvaluationTimeline::create($reqData) ;
+
+            break; 
 			
          case 'inception-report':
             $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 5 AND deleted = 0');
@@ -107,7 +113,12 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
             break; 
 
          case 'qualitative-assessment':
-            $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 7 AND deleted = 0');
+            $reqData = \json_decode($_POST['form-data'], true ) ;
+
+   			$data = !empty($reqData['ranking_id']) ? 
+				    \Project\Evaluation\Services\QaCriteriaSectionRanking::update($reqData) :
+				    \Project\Evaluation\Services\QaCriteriaSectionRanking::create($reqData) ;
+
             break; 
 
          default:
@@ -127,6 +138,37 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
 
 });
 
+$app->delete('/evaluation/{evaluationId}/{section}/delete/{user_id}', function ( $evaluationId, $section, $user_id ) use ($app) {
+
+ try {
+
+      $data = null; 
+
+      switch ($section) {
+
+         case 'team':
+
+   			$data =  \Project\Evaluation\Services\User::delete( $user_id ) ;
+
+            break;   
+			
+
+         default:
+            return sendResponse( 404, [ 'data' => $data , 'error' => 'Not Found' ] );
+            break;
+      }
+            
+      $data =['data' => $data , 'error' => null ];
+      return sendResponse( 201, $data );
+
+   } catch (\Exception $er) {
+      
+      $data =['data' => null, 'error' => $er->getMessage()];
+      return sendResponse( 500, $data );
+
+   } 
+
+});
 
 $app->get('/evaluation/ref/{refTable}', function ($refTable) use ($app) {
    

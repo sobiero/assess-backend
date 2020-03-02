@@ -9,7 +9,7 @@ class User
     {
 
 		$obj = new \Project\Evaluation\Models\User();
-  	    $obj->date_added           = \date("Y-m-d H:i:s"); 
+  	    $obj->created_date           = \date("Y-m-d H:i:s"); 
 
         return self::save($obj, $data);
 	   
@@ -25,18 +25,58 @@ class User
 
 	public static function save($obj, $data)
     {
+	
+	  if($data['role_id'] == 3 ){
+	   
+		$obj->first_name           = $data['first_name'] ;
+		$obj->last_name            = $data['last_name'] ;
+		$obj->alt_email            = $data["email"] ;
+		$obj->contract_start_date  = $data["contract_start_date"] ;
+		$obj->contract_end_date    = $data["contract_end_date"] ;
+		$obj->created_by_email     = \getUser();
+		$obj->deleted              = 0;
+		$obj->save();
 
-	  $obj->evaluation_id           =  $data['evaluation_id'] ;	  
-	  $obj->total_budget            =  $data['total_budget'] ;
-	  $obj->portion_available       =  $data['portion_available'] ;
-	  $obj->portion_supplemented    =  $data['portion_supplemented'] ;
-	  $obj->pm_user_email           = \getUser();
-	  $obj->deleted                 = 0;
+		$role = new \Project\Evaluation\Models\EvaluationUserRoleMap();
+		$role->evaluation_id =  $data['evaluation_id'] ;	 
+		$role->user_id       =  $obj->id ;	 
+		$role->role_id       =  $data['role_id'] ;
+		$role->save();
 
-	  $obj->save();
+		return ['user'=>$obj, 'role'=>$role];
 
-	  return $obj;
+	  } else {
+
+		$staff = \json_decode($data['staff_obj'], true);
+
+		$obj->first_name        = $staff["firstname"] ;
+		$obj->last_name         = $staff["lastname"] ;
+		$obj->un_email          = $staff["email"] ;
+		$obj->index_nbr         = $staff["index_no"] ;
+		$obj->unite_id          = $staff["unite_id"] ;
+		$obj->created_by_email  = \getUser();
+		$obj->deleted           = 0;
+		$obj->save();
+
+		$role = new \Project\Evaluation\Models\EvaluationUserRoleMap();
+		$role->evaluation_id =  $data['evaluation_id'] ;	 
+		$role->user_id       =  $obj->id ;	 
+		$role->role_id       =  $data['role_id'] ;
+		$role->save();
+
+		return ['user'=>$obj, 'role'=>$role];
+	  
+	  }
 	  
     }
+
+	public static function delete($user_id) 
+	{
+		$obj = \Project\Evaluation\Models\User::findFirst( $user_id );
+		$obj->deleted = 1;
+		$obj->save();
+        return $obj ;
+	
+	}
 
 }

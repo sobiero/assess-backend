@@ -9,9 +9,14 @@ class User extends Base
         return 'evm_user'; 
     }
 
-    public function initialize()
+	public function initialize()
     {
-
+        $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete(
+            [
+                'field' => 'deleted',
+                'value' => 1
+            ]
+        ));
 	   
     }
 

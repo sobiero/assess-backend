@@ -31,6 +31,7 @@ class EvaluationUserRoleMap extends Base
 
 		$sql = "
 				SELECT
+				    `a`.`evaluation_id` AS `evaluation_id`,
 					`a`.`role_id` AS `role_id`,
 					`c`.`role` AS `role`,
 					`a`.`user_id` AS `user_id`,
@@ -41,15 +42,15 @@ class EvaluationUserRoleMap extends Base
 					`b`.`alt_email` AS `alt_email`,
 					`b`.`index_nbr` AS `index_nbr`,
 					`b`.`unite_id` AS `unite_id`,
-					`b`.`contract_start` AS `contract_start`,
-					`b`.`contract_end` AS `contract_end`,
+					`b`.`contract_start_date` AS `contract_start_date`,
+					`b`.`contract_end_date` AS `contract_end_date`,
 					`b`.`created_date` AS `created_date`,
 					`b`.`created_by_email` AS `created_by_email` 
 				FROM
 					`evm_evaluation_user_role_map` `a`
 					JOIN `evm_user` `b` ON `a`.`user_id` = `b`.`id`
 					JOIN `evm_ref_role` `c` ON `a`.`role_id` = `c`.`id`
-				WHERE `a`.`evaluation_id` = " . $evaluationID;
+				WHERE `b`.`deleted` <> 1 AND `a`.`evaluation_id` = " . (int)$evaluationID;
 
 		$result_set = $db->query($sql);
         $result_set->setFetchMode( \Phalcon\Db::FETCH_ASSOC );
