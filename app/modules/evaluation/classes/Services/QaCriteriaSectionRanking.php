@@ -18,7 +18,7 @@ class QaCriteriaSectionRanking
 	public static function update($data)
     {
 
-		$obj = \Project\Evaluation\Models\QaCriteriaSectionRanking::findFirst($data['ranking_id']);
+		$obj = \Project\Evaluation\Models\QaCriteriaSectionRanking::findFirst($data['record_id']);
         return self::save($obj, $data);
 	   
     }
