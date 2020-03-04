@@ -9,9 +9,16 @@ class Log extends Base
         return 'evm_log'; 
     }
 
+
     public function initialize()
     {
-
+        $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete(
+            [
+                'field' => 'deleted',
+                'value' => 1
+            ]
+        ));
+	   
     }
 
 	public static function find($parameters = null)

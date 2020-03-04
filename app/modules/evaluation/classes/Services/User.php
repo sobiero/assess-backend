@@ -73,8 +73,7 @@ class User
 	public static function delete($user_id) 
 	{
 		$obj = \Project\Evaluation\Models\User::findFirst( $user_id );
-		$obj->deleted = 1;
-		$obj->save();
+		$obj->delete();
         return $obj ;
 	
 	}

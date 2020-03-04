@@ -16,9 +16,8 @@ class SectionRanking
           $dt['record_id'] = $v ;
 		  $dt['section_id'] = $k ;
 		  $dt['ranking_id'] = $data['ranking_id'][$k];
-		  //$dt['comment']  = $data['comment'][$k];
 
-		  if( empty($dt['response']) && empty($dt['comment']) ) {
+		  if( empty($dt['ranking_id']) ) {
 
 			  if(!empty($dt['record_id'])){
 				  $recs[] = self::update($dt);
