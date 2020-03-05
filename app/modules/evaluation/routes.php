@@ -54,6 +54,10 @@ $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $sec
             $data = \Project\Evaluation\Models\SectionRanking::findFullDataByEvaluationID( $evaluationId );
             break; 
 
+		case 'recommendations':
+            $data = \Project\Evaluation\Models\EvaluatorRecommendation::findFullDataByEvaluationID( $evaluationId );
+            break; 
+
          default:
             return sendResponse( 404, [ 'data' => $data , 'error' => 'Not Found' ] );
             break;
@@ -128,7 +132,16 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
 			$reqData = \json_decode($_POST['form-data'], true ) ;
             $data = \Project\Evaluation\Services\SectionRanking::createOrUpdate($reqData, $evaluationId) ;
             break; 	
-		
+
+		case 'recommendations':
+
+			$reqData = \json_decode($_POST['form-data'], true ) ;
+
+   			$data = !empty($reqData['recommendation_id']) ? 
+				    \Project\Evaluation\Services\EvaluatorRecommendation::update($reqData) :
+				    \Project\Evaluation\Services\EvaluatorRecommendation::create($reqData) ;
+
+            break; 
 
          default:
             return sendResponse( 404, [ 'data' => $data , 'error' => 'Not Found' ] );
