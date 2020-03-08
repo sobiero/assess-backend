@@ -2,15 +2,21 @@
 
 namespace Project\Evaluation\Models;
 
-class RecommendationResponsibleUnitMap extends Base
+class RecommendationResponsibleEntityMap extends Base
 {
 	public function getSource()
     {
-        return 'evm_recommendation_responsible_unit_map'; 
+        return 'evm_recommendation_responsible_entity_map'; 
     }
 
     public function initialize()
     {
+		$this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete(
+            [
+                'field' => 'deleted',
+                'value' => 1
+            ]
+        ));
 	   
     }
 

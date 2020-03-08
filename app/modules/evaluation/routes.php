@@ -160,32 +160,69 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
 
 });
 
-$app->delete('/evaluation/{evaluationId}/{section}/delete/{user_id}', function ( $evaluationId, $section, $user_id ) use ($app) {
+$app->post('/evaluation/{evaluationId}/recommendations/{recommendation_id}/acceptance', function ( $evaluationId, $recommendation_id ) use ($app) {
 
- try {
+    try {
 
       $data = null; 
 
-      switch ($section) {
+	  	$reqData = \json_decode($_POST['form-data'], true ) ;
 
-         case 'team':
+   		$data = !empty($reqData['recommendation_response_id']) ? 
+				    \Project\Evaluation\Services\PmRecommendationResponse::update($reqData, $app) :
+				    \Project\Evaluation\Services\PmRecommendationResponse::create($reqData, $app) ;
 
-   			$data =  \Project\Evaluation\Services\User::delete( $user_id ) ;
-
-            break;   
-			
-         default:
-            return sendResponse( 404, [ 'data' => $data , 'error' => 'Not Found' ] );
-            break;
-      }
-            
+                  
       $data =['data' => $data , 'error' => null ];
-      return sendResponse( 202, $data );
+      return sendResponse( 201, $data );
 
    } catch (\Exception $er) {
       
       $data =['data' => null, 'error' => $er->getMessage()];
       return sendResponse( 500, $data );
+
+   } 
+
+});
+
+$app->get('/evaluation/{evaluationId}/recommendations/{recommendation_id}/assignment', function ( $evaluationId, $recommendation_id ) use ($app) {
+
+    try {
+
+        $data = null; 
+
+   		$data = \Project\Evaluation\Models\RecommendationResponsibleEntityMap::find(' evaluator_recommendation_id = '. $recommendation_id .' AND deleted = 0');
+               
+        $data =['data' => $data , 'error' => null ];
+        return sendResponse( 200, $data );
+
+   } catch (\Exception $er) {
+      
+        $data =['data' => null, 'error' => $er->getMessage()];
+        return sendResponse( 500, $data );
+
+   } 
+
+});
+
+$app->post('/evaluation/{evaluationId}/recommendations/{recommendation_id}/assignment', function ( $evaluationId, $recommendation_id ) use ($app) {
+
+    try {
+
+        $data = null; 
+
+	  	$reqData = \json_decode($_POST['form-data'], true ) ;
+
+   		$data =   \Project\Evaluation\Services\RecommendationResponsibleEntityMap::create($reqData) ;
+
+                  
+      $data =['data' => $data , 'error' => null ];
+      return sendResponse( 201, $data );
+
+   } catch (\Exception $er) {
+      
+       $data =['data' => null, 'error' => $er->getMessage()];
+       return sendResponse( 500, $data );
 
    } 
 
@@ -295,6 +332,44 @@ $app->post('/evaluation/document', function () use ($app) {
       
         $data =['data' => null, 'error' => $er->getMessage()];
         return sendResponse( 500, $data );
+
+   } 
+
+});
+
+$app->delete('/evaluation/{evaluationId}/{section}/delete/{record_id}', function ( $evaluationId, $section, $record_id ) use ($app) {
+
+ try {
+
+      $data = null; 
+
+      switch ($section) {
+
+         case 'team':
+
+   			$data =  \Project\Evaluation\Services\User::delete( $record_id ) ;
+
+            break;  
+			
+		 case 'recommendations':
+
+   			$data =  \Project\Evaluation\Services\EvaluatorRecommendation::delete( $record_id ) ;
+
+            break;   
+			
+
+         default:
+            return sendResponse( 404, [ 'data' => $data , 'error' => 'Not Found' ] );
+            break;
+      }
+            
+      $data =['data' => $data , 'error' => null ];
+      return sendResponse( 202, $data );
+
+   } catch (\Exception $er) {
+      
+      $data =['data' => null, 'error' => $er->getMessage()];
+      return sendResponse( 500, $data );
 
    } 
 

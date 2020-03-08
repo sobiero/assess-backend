@@ -18,7 +18,7 @@ class EvaluatorRecommendation
 	public static function update($data)
     {
 
-		$obj = \Project\Evaluation\Models\EvaluatorRecommendation::findFirst($data['budget_id']);
+		$obj = \Project\Evaluation\Models\EvaluatorRecommendation::findFirst($data['recommendation_id']);
         return self::save($obj, $data);
 	   
     }
@@ -37,5 +37,13 @@ class EvaluatorRecommendation
 	  return $obj;
 
     }
+
+	public static function delete($recommendation_id) 
+	{
+		$obj = \Project\Evaluation\Models\EvaluatorRecommendation::findFirst( $recommendation_id );
+		$obj->delete();
+        return $obj ;
+	
+	}
 
 }

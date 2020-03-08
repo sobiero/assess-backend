@@ -16,7 +16,7 @@ class Document
 
 			foreach ($app->request->getUploadedFiles() as $file) {
 
-				$saved_name = uniqid() . "_" .$file->getName() ;
+				$saved_name = uniqid() . "_" . $file->getName() ;
 				
 				if ( @$file->moveTo($app->config->app->upload_dir . $saved_name ) ) {
 				
@@ -32,6 +32,7 @@ class Document
 					$doc->publication_date        = $data['publication_date'];
 					$doc->original_name           = $file->getName();
 					$doc->saved_name              = $saved_name ;
+					$doc->type                    = $file->getType();
 					$doc->size_in_bytes           = $file->getSize();
 					$doc->upload_by_user_email    = getUser();
 
