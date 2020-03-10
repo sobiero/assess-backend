@@ -31,7 +31,7 @@ class RecommendationResponsibleEntityMap
 
 			$tmp = \json_decode( $data['responsible_entity_staff_obj'], true );
    			$responsible_entity_id   = $tmp['email'];
-   			$responsible_entity_name = $tmp['firstname'] . ' ' . $tmp['firstname'] ;
+   			$responsible_entity_name = $tmp['firstname'] . ' ' . $tmp['lastname'] ;
 
             break;  
 			
@@ -71,10 +71,10 @@ class RecommendationResponsibleEntityMap
 	  
     }
 
-	public static function delete($data)
+	public static function delete($id)
     {
 
-		$obj = \Project\Evaluation\Models\Evaluation::findFirst($data['evaluation_id']);
+		$obj = \Project\Evaluation\Models\RecommendationResponsibleEntityMap::findFirst($id);
         $obj->delete();
 
 	    return $obj ;

@@ -7,6 +7,26 @@ $app->get('/evaluation', function () use ($app) {
  
 });
 
+$app->get('/evaluation/list', function () use ($app) {
+
+   try {
+
+      $data = null; 
+
+      $data = \Project\Evaluation\Models\Evaluation::find('deleted = 0');
+     
+      $data =['data' => $data , 'error' => null ];
+      return sendResponse( 200, $data );
+
+   } catch (\Exception $er) {
+      
+      $data =['data' => null, 'error' => $er->getMessage()];
+      return sendResponse( 500, $data );
+
+   } 
+ 
+});
+
 $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $section ) use ($app) {
    
    try {
@@ -375,35 +395,27 @@ $app->delete('/evaluation/{evaluationId}/{section}/delete/{record_id}', function
 
 });
 
-/*
-$app->put('/evaluation/document', function () use ($app) {
-   
-   try {
+$app->delete('/evaluation/{evaluationId}/{section}/{recommendation_id}/assignment/delete/{record_id}', function ( $evaluationId, $section, $recommendation_id, $record_id ) use ($app) {
 
-      $data = \file_get_contents('php://input'); 
+ try {
 
-	  print_r( $_FILES ); exit; 
-	  
-	    if ($app->request->hasFiles() == true) {
-            // Print the real file names and sizes
-            foreach ($app->request->getUploadedFiles() as $file) {
+      $data = null; 
 
-                //Print file details
-                echo $file->getName(), " ", $file->getSize(), "\n"; exit;
+      switch ($section) {
+	
+		 case 'recommendations':
 
-                //Move the file into the application
-                //$file->moveTo('files/');
-            }
-        }
-	  
-	  //var_dump($_GET); 
-	  //print_r($data); exit;
-	  //$data = \json_decode($data, true);
- 	  //$data = \json_decode($data['data'], true);;
+   			$data =  \Project\Evaluation\Services\RecommendationResponsibleEntityMap::delete( $record_id ) ;
 
-           
-      $data =['data' => [$data] , 'error' => null ];
-      return sendResponse( 201, $data );
+            break;   
+			
+         default:
+            return sendResponse( 404, [ 'data' => $data , 'error' => 'Not Found' ] );
+            break;
+      }
+            
+      $data =['data' => $data , 'error' => null ];
+      return sendResponse( 202, $data );
 
    } catch (\Exception $er) {
       
@@ -413,5 +425,3 @@ $app->put('/evaluation/document', function () use ($app) {
    } 
 
 });
-*/
-
