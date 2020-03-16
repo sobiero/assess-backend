@@ -26,7 +26,7 @@ class User
 	public static function save($obj, $data)
     {
 	
-	  if($data['role_id'] == 3 ){
+	  if($data['role_id'] == 5 || $data['role_id'] == 6 ){
 	   
 		$obj->first_name           = $data['first_name'] ;
 		$obj->last_name            = $data['last_name'] ;

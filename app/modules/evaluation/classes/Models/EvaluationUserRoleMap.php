@@ -34,6 +34,7 @@ class EvaluationUserRoleMap extends Base
 				    `a`.`evaluation_id` AS `evaluation_id`,
 					`a`.`role_id` AS `role_id`,
 					`c`.`role` AS `role`,
+                    `c`.`role_type_id` AS `role_type_id`,
 					`a`.`user_id` AS `user_id`,
 					`b`.`first_name` AS `first_name`,
 					`b`.`last_name` AS `last_name`,

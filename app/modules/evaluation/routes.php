@@ -1,5 +1,7 @@
 <?php
 
+//print_r( $app->getDI()->get('auth')->data('email') ); exit ;
+
 $app->get('/evaluation', function () use ($app) {
 
     $data = [ 'data' => 'Project Evaluation Module API', 'error' => null ];

@@ -2,6 +2,8 @@
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 
+global $di;
+
 $di = new FactoryDefault();
 
 $di['db'] = function () use ($config) {

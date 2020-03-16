@@ -1,6 +1,5 @@
 <?php
 
-
 $app->get('/evaluation/ext-url', function () use ($app) {
 
 	 $response = new \Phalcon\Http\Response();
@@ -119,10 +118,15 @@ function getBearerToken() {
     return null;
 }
 
-function getUser(){
-   $bearer = getBearerToken();
-   $data = \json_decode($bearer, true);
-   return @$data['user'];
+function getUser() {
+
+	$di = \Phalcon\DI::getDefault();
+
+	return $di['auth']->data('email') ;
+
+   // $bearer = getBearerToken();
+   // $data = \json_decode($bearer, true);
+   // return @$data['user'];
 }
 function getToken(){
    $bearer = getBearerToken();
