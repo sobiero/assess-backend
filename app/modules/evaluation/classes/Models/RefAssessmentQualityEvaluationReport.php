@@ -2,11 +2,11 @@
 
 namespace Project\Evaluation\Models;
 
-class RefSection extends Base
+class RefAssessmentQualityEvaluationReport extends Base
 {
 	public function getSource()
     {
-        return 'evm_ref_section'; 
+        return 'evm_ref_assessment_quality_evaluation_report'; 
     }
 
     public function initialize()

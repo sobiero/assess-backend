@@ -2,11 +2,13 @@
 
 namespace Project\Evaluation\Models;
 
-class RefRanking extends Base
+//Highly Unsatis to Highly Satis
+
+class RefRatingHUHS extends Base
 {
 	public function getSource()
     {
-        return 'evm_ref_ranking'; 
+        return 'evm_ref_rating_hu_hs'; 
     }
 
     public function initialize()

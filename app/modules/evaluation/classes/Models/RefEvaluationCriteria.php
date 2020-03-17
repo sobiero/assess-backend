@@ -2,11 +2,13 @@
 
 namespace Project\Evaluation\Models;
 
-class RefCriteriaSection extends Base
+//Evaluation Ratings
+
+class RefEvaluationCriteria extends Base
 {
 	public function getSource()
     {
-        return 'evm_ref_criteria_section'; 
+        return 'evm_ref_evaluation_criteria'; 
     }
 
     public function initialize()

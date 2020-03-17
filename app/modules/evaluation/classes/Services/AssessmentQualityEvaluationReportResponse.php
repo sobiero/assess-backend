@@ -2,13 +2,13 @@
 
 namespace Project\Evaluation\Services;
 
-class QaCriteriaSectionRanking 
+class AssessmentQualityEvaluationReportResponse 
 {
 
     public static function create($data)
     {
 
-		$obj = new \Project\Evaluation\Models\QaCriteriaSectionRanking();
+		$obj = new \Project\Evaluation\Models\AssessmentQualityEvaluationReportResponse();
   	    $obj->date_ranked           = \date("Y-m-d H:i:s"); 
 
         return self::save($obj, $data);
@@ -18,7 +18,7 @@ class QaCriteriaSectionRanking
 	public static function update($data)
     {
 
-		$obj = \Project\Evaluation\Models\QaCriteriaSectionRanking::findFirst($data['record_id']);
+		$obj = \Project\Evaluation\Models\AssessmentQualityEvaluationReportResponse::findFirst($data['record_id']);
         return self::save($obj, $data);
 	   
     }

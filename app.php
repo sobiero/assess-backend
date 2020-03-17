@@ -103,7 +103,7 @@ function getAuthorizationHeader(){
             }
         }
         return $headers;
-    }
+ }
 /**
  * get access token from header
  * */

@@ -2,11 +2,11 @@
 
 namespace Project\Evaluation\Models;
 
-class SectionRanking extends Base
+class EvaluationCriteriaResponse extends Base
 {
 	public function getSource()
     {
-        return 'evm_section_ranking'; 
+        return 'evm_evaluation_criteria_response'; 
     }
 
     public function initialize()
@@ -35,23 +35,31 @@ class SectionRanking extends Base
 		$di = \Phalcon\DI::getDefault();
 		$db = $di->get('db');
 
-		$sql = "SELECT
-					`a`.`id` AS `section_id`,
-					`a`.`title` AS `section_title`,
-					`b`.`evaluation_id` AS `evaluation_id`,
-					`b`.`id` AS `record_id`,
-					`b`.`ranking_id` AS `ranking_id`,
-					`b`.`rank_date` AS `rank_date`,
-					`b`.ranked_by_user_email AS ranked_by_user_email 
-				FROM
-					`evm_ref_section` `a`
-					LEFT JOIN `evm_section_ranking` `b` 
-					ON ( `a`.`id` = `b`.`section_id` 
-					AND `b`.`evaluation_id` = ". (int)$evaluationID ."
-					AND `b`.`deleted` <> 1 ) 
-				WHERE
-					`a`.`deleted` <> 1";
-					
+		$sql = "
+				SELECT
+					a.id as criterion_id,
+					a.criterion,
+					a.parent_id,
+					a.reporting,
+					a.`level`,
+					b.id as response_id,
+					b.evaluation_id,
+					b.rating_id,
+					b.summary_assessment,
+					b.date_rated,
+					b.rated_by_user_email
+					FROM
+						evm_ref_evaluation_criteria a
+						LEFT JOIN evm_evaluation_criteria_response b 
+						ON ( a.id = b.criterion_id 
+						AND b.evaluation_id = ". (int)$evaluationID ."  
+						AND b.deleted <> 1 ) 
+					WHERE
+						a.deleted <> 1 
+					ORDER BY
+						a.`level`,
+						a.`order` ";
+
 		$result_set = $db->query($sql);
         $result_set->setFetchMode( \Phalcon\Db::FETCH_ASSOC );
         $result_set = $result_set->fetchAll($result_set);

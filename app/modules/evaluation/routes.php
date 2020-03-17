@@ -64,16 +64,16 @@ $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $sec
             $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 7 AND deleted = 0');
             break; 
 
-         case 'qualitative-assessment':
-            $data = \Project\Evaluation\Models\QaCriteriaSectionRanking::findFullDataByEvaluationID( $evaluationId );
+         case 'assessment-report-quality':
+            $data = \Project\Evaluation\Models\AssessmentQualityEvaluationReportResponse::findFullDataByEvaluationID( $evaluationId );
             break; 
 
 		case 'compliance-checklist':
-            $data = \Project\Evaluation\Models\ComplianceResponse::findFullDataByEvaluationID( $evaluationId );
+            $data = \Project\Evaluation\Models\ComplianceChecklistResponse::findFullDataByEvaluationID( $evaluationId );
             break; 
 		
 		case 'evaluation-ratings':
-            $data = \Project\Evaluation\Models\SectionRanking::findFullDataByEvaluationID( $evaluationId );
+            $data = \Project\Evaluation\Models\EvaluationCriteriaResponse::findFullDataByEvaluationID( $evaluationId );
             break; 
 
 		case 'recommendations':
@@ -134,7 +134,7 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
 
             break; 
 			
-         case 'qualitative-assessment':
+         case 'assessment-report-quality':
             $reqData = \json_decode($_POST['form-data'], true ) ;
 
    			$data = !empty($reqData['record_id']) ? 
@@ -265,8 +265,8 @@ $app->get('/evaluation/ref/{refTable}', function ($refTable) use ($app) {
             $data = \Project\Evaluation\Models\RefEvaluationType::find();
             break;   
             
-         case 'criteria-section':
-            $data = \Project\Evaluation\Models\RefCriteriaSection::find('deleted = 0');
+         case 'evaluation-criteria':
+            $data = \Project\Evaluation\Models\RefEvaluationCriteria::find('deleted = 0');
             break;   
 		 
 		 case 'menu-item':
@@ -277,8 +277,8 @@ $app->get('/evaluation/ref/{refTable}', function ($refTable) use ($app) {
             $data = \Project\Evaluation\Models\RefProjectType::find('deleted = 0');
             break;   
 
-         case 'ranking':
-            $data = \Project\Evaluation\Models\RefRanking::find();
+         case 'rating-hu-hs':
+            $data = \Project\Evaluation\Models\RefRatingHUHS::find();
             break;  
 
          case 'responsible-entity-type':
@@ -289,8 +289,8 @@ $app->get('/evaluation/ref/{refTable}', function ($refTable) use ($app) {
             $data = \Project\Evaluation\Models\RefRole::find('deleted = 0');
             break;  
 
-         case 'section':
-            $data = \Project\Evaluation\Models\RefSection::find('deleted = 0');
+         case 'assessment-report-quality':
+            $data = \Project\Evaluation\Models\RefQualitativeAssessmentEvaluationReport::find('deleted = 0');
             break;  
 
          default:
