@@ -62,7 +62,6 @@ class AssessmentQualityEvaluationReportResponse extends Base
 				a.`order`
 
 		";
-
 					
 		$result_set = $db->query($sql);
         $result_set->setFetchMode( \Phalcon\Db::FETCH_ASSOC );

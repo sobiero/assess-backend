@@ -137,9 +137,7 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
          case 'assessment-report-quality':
             $reqData = \json_decode($_POST['form-data'], true ) ;
 
-   			$data = !empty($reqData['record_id']) ? 
-				    \Project\Evaluation\Services\QaCriteriaSectionRanking::update($reqData) :
-				    \Project\Evaluation\Services\QaCriteriaSectionRanking::create($reqData) ;
+   			$data =  \Project\Evaluation\Services\AssessmentQualityEvaluationReportResponse::createOrUpdate($reqData, $evaluationId) ;
 
             break; 
 

@@ -5,11 +5,48 @@ namespace Project\Evaluation\Services;
 class AssessmentQualityEvaluationReportResponse 
 {
 
+	public static function createOrUpdate($data, $evaluation_id)
+	{
+      
+	  $dt =[];
+	  $recs = [];
+      
+	  foreach($data['response_id'] as $k => $v ){
+
+          $dt['evaluation_id'] = $evaluation_id ;
+          $dt['response_id'] = $v ;
+		  $dt['criterion_id'] = $k ;
+		  $dt['rating_id'] = $data['rating_id'][$k];
+		  $dt['eval_office_comment']  = $data['eval_office_comment'][$k];
+
+		  if( empty($dt['rating_id']) && empty($dt['eval_office_comment']) ) {
+
+			  if(!empty($dt['response_id'])){
+				  $recs[] = self::update($dt);
+			  }
+		  
+		  } else {
+
+			  if(!empty($dt['response_id'])){
+
+				  $recs[] = self::update($dt);
+			  
+			  }else{
+			      $recs[] = self::create($dt);
+			  }
+		  
+		  }
+	  
+	  }
+
+	  return $recs ;
+      
+	}
+
     public static function create($data)
     {
 
 		$obj = new \Project\Evaluation\Models\AssessmentQualityEvaluationReportResponse();
-  	    $obj->date_ranked           = \date("Y-m-d H:i:s"); 
 
         return self::save($obj, $data);
 	   
@@ -18,7 +55,7 @@ class AssessmentQualityEvaluationReportResponse
 	public static function update($data)
     {
 
-		$obj = \Project\Evaluation\Models\AssessmentQualityEvaluationReportResponse::findFirst($data['record_id']);
+		$obj = \Project\Evaluation\Models\AssessmentQualityEvaluationReportResponse::findFirst($data['response_id']);
         return self::save($obj, $data);
 	   
     }
@@ -26,14 +63,13 @@ class AssessmentQualityEvaluationReportResponse
 	public static function save($obj, $data)
     {
 
-	  $obj->evaluation_id        =  $data['evaluation_id'] ;	  
-	  $obj->criteria_section_id  =  $data['criteria_section_id'] ;
-	  $obj->draft_report_rating_id   =  $data['draft_report_rating_id'] ;
-	  $obj->draft_report_comment     =  $data['draft_report_comment'] ;
-	  $obj->complete_report_rating_id  = $data['complete_report_rating_id'] ;
-      $obj->complete_report_comment = $data['complete_report_comment'] ;
-	  $obj->ranked_by_user_email   = \getUser();
-	  $obj->deleted                    =  0;
+	  $obj->evaluation_id =  $data['evaluation_id'] ;	  
+	  $obj->criterion_id  =  $data['criterion_id'] ;
+	  $obj->eval_office_comment =  empty(trim($data['eval_office_comment'])) ? null : trim($data['eval_office_comment']) ;
+	  $obj->rating_id  = $data['rating_id'] ;
+      $obj->date_rated = \date("Y-m-d H:i:s"); 
+	  $obj->rated_by_user_email   = \getUser();
+	  $obj->deleted    =  0;
 
 	  $obj->save();
 
@@ -42,6 +78,3 @@ class AssessmentQualityEvaluationReportResponse
     }
 
 }
-
-
-
