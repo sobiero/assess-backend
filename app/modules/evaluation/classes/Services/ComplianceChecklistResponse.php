@@ -2,7 +2,7 @@
 
 namespace Project\Evaluation\Services;
 
-class ComplianceResponse 
+class ComplianceChecklistResponse 
 {
 	public static function createOrUpdate($data, $evaluation_id)
 	{
@@ -10,23 +10,23 @@ class ComplianceResponse
 	  $dt =[];
 	  $recs = [];
       
-	  foreach($data['record_id'] as $k => $v ){
+	  foreach($data['response_id'] as $k => $v ){
 
           $dt['evaluation_id'] = $evaluation_id ;
-          $dt['record_id'] = $v ;
-		  $dt['compliance_checklist_id'] = $k ;
-		  $dt['response'] = $data['response'][$k];
+          $dt['response_id'] = $v ;
+		  $dt['criterion_id'] = $k ;
+		  $dt['compliance'] = $data['compliance'][$k];
 		  $dt['comment']  = $data['comment'][$k];
 
-		  if( empty($dt['response']) && empty($dt['comment']) ) {
+		  if( !isset($dt['compliance']) && !isset($dt['comment']) ) {
 
-			  if(!empty($dt['record_id'])){
+			  if(isset($dt['response_id'])){
 				  $recs[] = self::update($dt);
 			  }
 		  
 		  } else {
 
-			  if(!empty($dt['record_id'])){
+			  if(isset($dt['response_id'])){
 
 				  $recs[] = self::update($dt);
 			  
@@ -45,7 +45,7 @@ class ComplianceResponse
     public static function create($data)
     {
 
-		$obj = new \Project\Evaluation\Models\ComplianceResponse();
+		$obj = new \Project\Evaluation\Models\ComplianceChecklistResponse();
   	    
         return self::save($obj, $data);
 	   
@@ -54,7 +54,7 @@ class ComplianceResponse
 	public static function update($data)
     {
 
-		$obj = \Project\Evaluation\Models\ComplianceResponse::findFirst($data['record_id']);
+		$obj = \Project\Evaluation\Models\ComplianceChecklistResponse::findFirst($data['response_id']);
         return self::save($obj, $data);
 	   
     }
@@ -62,12 +62,13 @@ class ComplianceResponse
 	public static function save($obj, $data)
     {
 
-	  $obj->evaluation_id           =  $data['evaluation_id'] ;	  
-	  $obj->compliance_checklist_id =  $data['compliance_checklist_id'] ;
-	  $obj->response       =  $data['response'] ;
-	  $obj->comment    =  trim($data['comment']) == "" ? null : $data['comment'] ;
+	  $obj->evaluation_id =  $data['evaluation_id'] ;	  
+	  $obj->criterion_id  =  $data['criterion_id'] ;
+	  $obj->compliance    =  $data['compliance'] ;
+	  $obj->comment    =  trim($data['comment']) == '' ? null : $data['comment'] ;
 	  $obj->response_by_user_email = \getUser();
-	  $obj->response_date          = \date("Y-m-d H:i:s"); 
+	  $obj->response_date = \date("Y-m-d H:i:s"); 
+  	  $obj->deleted = 0;
 
 	  $obj->save();
 

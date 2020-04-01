@@ -42,6 +42,7 @@ class AssessmentQualityEvaluationReportResponse extends Base
 				a.parent_id,
 				a.`level`,
 				a.reporting,
+				a.rating_scale_label,
 				b.evaluation_id,
 				b.id AS response_id,
 				b.eval_office_comment,

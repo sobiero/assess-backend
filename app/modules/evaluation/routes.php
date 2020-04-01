@@ -29,6 +29,26 @@ $app->get('/evaluation/list', function () use ($app) {
  
 });
 
+$app->get('/evaluation/user', function () use ($app) {
+
+   try {
+
+      $data = null; 
+
+      $data = \Project\Evaluation\Services\User::loggedInUser();
+     
+      $data =['data' => $data , 'error' => null ];
+      return sendResponse( 200, $data );
+
+   } catch (\Exception $er) {
+      
+      $data =['data' => null, 'error' => $er->getMessage()];
+      return sendResponse( 500, $data );
+
+   } 
+ 
+});
+
 $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $section ) use ($app) {
    
    try {
@@ -36,6 +56,11 @@ $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $sec
       $data = null; 
 
       switch ($section) {
+
+        case 'user':
+            $data = \Project\Evaluation\Models\User::findRolesInEvaluation($evaluationId );
+            break;
+
          case 'budget':
             $data = \Project\Evaluation\Models\EvaluationBudget::findFirst(' evaluation_id = '. $evaluationId .' AND deleted = 0');
             break;
@@ -56,11 +81,11 @@ $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $sec
             $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 5 AND deleted = 0');
             break;   
 
-         case 'draft-main-report':
+         case 'draft-evaluation-report':
             $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 6 AND deleted = 0');
             break;   
 
-         case 'complete-report':
+         case 'final-evaluation-report':
             $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 7 AND deleted = 0');
             break; 
 
@@ -144,13 +169,13 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
 		 case 'compliance-checklist':
 
 			$reqData = \json_decode($_POST['form-data'], true ) ;
-            $data = \Project\Evaluation\Services\ComplianceResponse::createOrUpdate($reqData, $evaluationId) ;
+            $data = \Project\Evaluation\Services\ComplianceChecklistResponse::createOrUpdate($reqData, $evaluationId) ;
             break;
 		
 		 case 'evaluation-ratings':
 
 			$reqData = \json_decode($_POST['form-data'], true ) ;
-            $data = \Project\Evaluation\Services\SectionRanking::createOrUpdate($reqData, $evaluationId) ;
+            $data = \Project\Evaluation\Services\EvaluationCriteriaResponse::createOrUpdate($reqData, $evaluationId) ;
             break; 	
 
 		case 'recommendations':
@@ -275,8 +300,8 @@ $app->get('/evaluation/ref/{refTable}', function ($refTable) use ($app) {
             $data = \Project\Evaluation\Models\RefProjectType::find('deleted = 0');
             break;   
 
-         case 'rating-hu-hs':
-            $data = \Project\Evaluation\Models\RefRatingHUHS::find();
+         case 'rating-scale':
+            $data = \Project\Evaluation\Models\RefRatingScale::find(' 1=1 ORDER BY weight DESC');
             break;  
 
          case 'responsible-entity-type':

@@ -41,9 +41,4 @@ $payload = [
 
 $token = $app->auth->make($payload);
 
-print "\n<script>
- window.uniteID       = '". $data['uniteid'][0] ."';
- window.userEmail     = '". $data['email'][0] ."';
- window.userFullName  = '". $data['fullname'][0] ."';
- window.authToken     = '". $token ."';
-</script>\n";
+print '<input type="hidden" name="authToken" id="authToken" value="'.$token.'">';

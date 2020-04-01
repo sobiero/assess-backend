@@ -2,9 +2,8 @@
 
 namespace Project\Evaluation\Services;
 
-class AssessmentQualityEvaluationReportResponse 
+class EvaluationCriteriaResponse 
 {
-
 	public static function createOrUpdate($data, $evaluation_id)
 	{
       
@@ -17,9 +16,9 @@ class AssessmentQualityEvaluationReportResponse
           $dt['response_id'] = $v ;
 		  $dt['criterion_id'] = $k ;
 		  $dt['rating_id'] = $data['rating_id'][$k];
-		  $dt['eval_office_comment']  = $data['eval_office_comment'][$k];
+		  $dt['summary_assessment'] = $data['summary_assessment'][$k];
 
-		  if( !isset($dt['rating_id']) && !isset($dt['eval_office_comment']) ) {
+		  if ( !isset($dt['rating_id']) && !isset($dt['summary_assessment']) ) {
 
 			  if(isset($dt['response_id'])){
 				  $recs[] = self::update($dt);
@@ -46,8 +45,7 @@ class AssessmentQualityEvaluationReportResponse
     public static function create($data)
     {
 
-		$obj = new \Project\Evaluation\Models\AssessmentQualityEvaluationReportResponse();
-
+		$obj = new \Project\Evaluation\Models\EvaluationCriteriaResponse();
         return self::save($obj, $data);
 	   
     }
@@ -55,7 +53,7 @@ class AssessmentQualityEvaluationReportResponse
 	public static function update($data)
     {
 
-		$obj = \Project\Evaluation\Models\AssessmentQualityEvaluationReportResponse::findFirst($data['response_id']);
+		$obj = \Project\Evaluation\Models\EvaluationCriteriaResponse::findFirst($data['response_id']);
         return self::save($obj, $data);
 	   
     }
@@ -65,11 +63,10 @@ class AssessmentQualityEvaluationReportResponse
 
 	  $obj->evaluation_id =  $data['evaluation_id'] ;	  
 	  $obj->criterion_id  =  $data['criterion_id'] ;
-	  $obj->eval_office_comment =  trim($data['eval_office_comment']) != "" ? null : trim($data['eval_office_comment']) ;
-	  $obj->rating_id  = $data['rating_id'] ;
-      $obj->date_rated = \date("Y-m-d H:i:s"); 
-	  $obj->rated_by_user_email   = \getUser();
-	  $obj->deleted    =  0;
+	  $obj->rating_id =  $data['rating_id'] ;
+	  $obj->summary_assessment  =  trim($data['summary_assessment']) == "" ? null : $data['summary_assessment'] ;
+	  $obj->rated_by_user_email = \getUser();
+	  $obj->date_rated = \date("Y-m-d H:i:s"); 
 
 	  $obj->save();
 

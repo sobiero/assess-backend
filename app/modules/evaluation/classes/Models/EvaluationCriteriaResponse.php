@@ -42,6 +42,7 @@ class EvaluationCriteriaResponse extends Base
 					a.parent_id,
 					a.reporting,
 					a.`level`,
+					a.rating_scale_label,
 					b.id as response_id,
 					b.evaluation_id,
 					b.rating_id,

@@ -2,17 +2,21 @@
 
 namespace Project\Evaluation\Models;
 
-//Highly Unsatis to Highly Satis
-
-class RefRatingHUHS extends Base
+class Admin extends Base
 {
 	public function getSource()
     {
-        return 'evm_ref_rating_hu_hs'; 
+        return 'evm_admin'; 
     }
 
-    public function initialize()
+	public function initialize()
     {
+        $this->addBehavior(new \Phalcon\Mvc\Model\Behavior\SoftDelete(
+            [
+                'field' => 'deleted',
+                'value' => 1
+            ]
+        ));
 	   
     }
 

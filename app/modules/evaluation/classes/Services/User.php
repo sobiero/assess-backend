@@ -78,4 +78,21 @@ class User
 	
 	}
 
+	public static function loggedInUser()
+	{
+		$email = \getUser();
+
+		$user = \file_get_contents('https://apps1.unep.org/umoja-v2/staff/get-by-email/' . $email );
+
+		$user = $user ? \json_decode($user, true) : null ;
+		$user = $user['data'] ? $user['data'] : $user ;
+
+		$isAdmin = \Project\Evaluation\Models\Admin::findFirst( " un_email = '". $email . "' AND deleted = 0 " );
+
+		return ['user' => $user, 'is_admin' => $isAdmin ? true : false ];
+	
+	
+	}
+
+
 }

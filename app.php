@@ -59,7 +59,7 @@ function sendResponse($code, $data)
         503 => 'Service Unavailable',
         504 => 'Gateway Time-out',
         505 => 'HTTP Version not supported',
-    ];
+    ]; 
 
     $response = new \Phalcon\Http\Response();
     
@@ -76,8 +76,6 @@ function sendResponse($code, $data)
     return $response->send();
  
 }
-
-
 
 function getAuthorizationHeader(){
         $headers = null;
