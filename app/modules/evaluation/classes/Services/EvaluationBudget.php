@@ -32,7 +32,7 @@ class EvaluationBudget
 		  $obj->eval_funds_from_project = $data['eval_funds_from_project'] ;
 
           if ( $obj->eval_funds_from_project != $data['eval_funds_from_project'] ) {
-		     // \Project\Evaluation\Services\EmailNotification::
+		    // \Project\Evaluation\Services\EmailNotification::
 		  }
 
 		  $obj->umoja_coding_block_for_eval_funds = $data['umoja_coding_block_for_eval_funds'] ;
@@ -42,7 +42,8 @@ class EvaluationBudget
 			$obj->update_by_pm_user_email = \getUser(); 
 		    $obj->update_date_pm = \date("Y-m-d H:i:s"); 
 		  }
-	  } else if ( $data['logged_in_user_role']['id'] === 1 || $data['logged_in_user_role']['id'] === 2 ) {
+	  } 
+      if ( $data['logged_in_user_role']['id'] === 1 || $data['logged_in_user_role']['id'] === 2 ) {
 	     $obj->estimate_total_eval_cost = $data['estimate_total_eval_cost'] ;
 	     $obj->is_budget_sufficient = $data['is_budget_sufficient'] ;
 	     $obj->em_comment = $data['em_comment'] ;

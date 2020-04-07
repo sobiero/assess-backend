@@ -49,6 +49,7 @@ $app->get('/evaluation/user', function () use ($app) {
  
 });
 
+
 $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $section ) use ($app) {
    
    try {
@@ -87,6 +88,10 @@ $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $sec
 
          case 'final-evaluation-report':
             $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 7 AND deleted = 0');
+            break; 
+		
+	     case 'final-evaluation-report-comment':
+            $data = \Project\Evaluation\Models\FinalEvaluationReportComment::find(' evaluation_id = '. $evaluationId .' AND deleted = 0');
             break; 
 
          case 'assessment-report-quality':
@@ -144,8 +149,8 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
             $reqData = \json_decode($_POST['form-data'], true ) ;
 
    			$data = !empty($reqData['user_id']) ? 
-				    \Project\Evaluation\Services\User::update($reqData) :
-				    \Project\Evaluation\Services\User::create($reqData) ;
+				    \Project\Evaluation\Services\User::update($reqData, $app) :
+				    \Project\Evaluation\Services\User::create($reqData, $app) ;
 
             break;   
 			
@@ -185,6 +190,24 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
    			$data = !empty($reqData['recommendation_id']) ? 
 				    \Project\Evaluation\Services\EvaluatorRecommendation::update($reqData) :
 				    \Project\Evaluation\Services\EvaluatorRecommendation::create($reqData) ;
+
+            break; 
+
+		case 'final-evaluation-report-comment':
+
+			$reqData = \json_decode($_POST['form-data'], true ) ;
+
+   			$data = !empty($reqData['comment_id']) ? 
+				    \Project\Evaluation\Services\FinalEvaluationReportComment::update($reqData) :
+				    \Project\Evaluation\Services\FinalEvaluationReportComment::create($reqData) ;
+
+            break; 
+
+		case 'review-finalize-evaluation':
+
+			$reqData = \json_decode($_POST['form-data'], true ) ;
+
+   			$data = \Project\Evaluation\Services\Evaluate::updateStatus($reqData) ;
 
             break; 
 
@@ -236,7 +259,7 @@ $app->get('/evaluation/{evaluationId}/recommendations/{recommendation_id}/assign
 
         $data = null; 
 
-   		$data = \Project\Evaluation\Models\RecommendationResponsibleEntityMap::find(' evaluator_recommendation_id = '. $recommendation_id .' AND deleted = 0');
+   		$data = \Project\Evaluation\Models\RecommendationResponsibleEntityMap::find(' evaluator_recommendation_id = '. (int)$recommendation_id .' AND deleted = 0');
                
         $data =['data' => $data , 'error' => null ];
         return sendResponse( 200, $data );
@@ -382,6 +405,38 @@ $app->post('/evaluation/document', function () use ($app) {
 
 });
 
+$app->get('/evaluation/document/{id}', function ($id) use ($app) {
+
+    $doc = \Project\Evaluation\Models\Document::findFirst($id) ;
+
+    if (@$doc->id) {
+
+    $filepath = $app->config->app->upload_dir .  $doc->saved_name ;
+
+        if(file_exists($filepath)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'. \basename($filepath).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . \filesize($filepath));
+            flush(); // Flush system output buffer
+            readfile($filepath);
+            die();
+        } else {
+        
+		  $data =['data' => null, 'error' => 'File not found'];
+          return sendResponse( 404, $data );
+        }
+    } else {
+    
+		$data =['data' => null, 'error' => 'File not found'];
+        return sendResponse( 404, $data );
+    }
+   
+});
+
 $app->delete('/evaluation/{evaluationId}/{section}/delete/{record_id}', function ( $evaluationId, $section, $record_id ) use ($app) {
 
  try {
@@ -450,3 +505,5 @@ $app->delete('/evaluation/{evaluationId}/{section}/{recommendation_id}/assignmen
    } 
 
 });
+
+

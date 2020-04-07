@@ -5,34 +5,43 @@ namespace Project\Evaluation\Services;
 class User 
 {
 
-    public static function create($data)
+    public static function create($data, $app)
     {
 
 		$obj = new \Project\Evaluation\Models\User();
   	    $obj->created_date           = \date("Y-m-d H:i:s"); 
 
-        return self::save($obj, $data);
+        return self::save($obj, $data, $app);
 	   
     }
 
-	public static function update($data)
+	public static function update($data, $app)
     {
 
 		$obj = \Project\Evaluation\Models\User::findFirst($data['user_id']);
-        return self::save($obj, $data);
+        return self::save($obj, $data, $app);
 	   
     }
 
-	public static function save($obj, $data)
+	public static function save($obj, $data, $app)
     {
 	
 	  if($data['role_id'] == 5 || $data['role_id'] == 6 ){
+
+		list($first_name, $last_name) = explode(" ", $data['full_name'], 2);
+	
+		$data['belongs_to_menu_item_id'] = 3;
+
+		$doc = self::upload($data, $app);
+		$obj->first_name           = $first_name;
+		$obj->last_name            = $last_name ;
 	   
-		$obj->first_name           = $data['first_name'] ;
-		$obj->last_name            = $data['last_name'] ;
+		//$obj->first_name           = $data['first_name'] ;
+		//$obj->last_name            = $data['last_name'] ;
 		$obj->alt_email            = $data["email"] ;
 		$obj->contract_start_date  = $data["contract_start_date"] ;
 		$obj->contract_end_date    = $data["contract_end_date"] ;
+		$obj->document_id = @$doc[0]->id ;
 		$obj->created_by_email     = \getUser();
 		$obj->deleted              = 0;
 		$obj->save();
@@ -70,6 +79,19 @@ class User
 	  
     }
 
+	public static function upload($data, $app) 
+	{
+
+		$data['title'] = 'Consultant CV';
+		$data['description'] = 'Consultant CV' ;
+		$data['publication_date'] = null ;
+
+		$data = \Project\Evaluation\Services\Document::upload($data, $app);
+
+		return $data; 
+	
+	}
+
 	public static function delete($user_id) 
 	{
 		$obj = \Project\Evaluation\Models\User::findFirst( $user_id );
@@ -82,7 +104,7 @@ class User
 	{
 		$email = \getUser();
 
-		$user = \file_get_contents('https://apps1.unep.org/umoja-v2/staff/get-by-email/' . $email );
+		$user = @\file_get_contents('https://apps1.unep.org/umoja-v2/staff/get-by-email/' . $email );
 
 		$user = $user ? \json_decode($user, true) : null ;
 		$user = $user['data'] ? $user['data'] : $user ;

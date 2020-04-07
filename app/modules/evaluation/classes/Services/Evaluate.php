@@ -42,4 +42,20 @@ class Evaluate
 	  
     }
 
+	public static function updateStatus($data)
+    {
+
+		$obj = \Project\Evaluation\Models\Evaluation::findFirst($data['evaluation_id']);
+
+		$obj->status_id = $data['status_id'];
+		$obj->status_update_date = \date("Y-m-d H:i:s"); 
+		$obj->status_update_by_email = \getUser() ;
+
+		$obj->save();
+
+		return $obj;
+	  
+    }
+
+
 }

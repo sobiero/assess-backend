@@ -10,7 +10,9 @@ $saml = new \SimpleSAML\Auth\Simple('default-sp');
 $saml->requireAuth();
 $data = $saml->getAttributes();
 
-$userObject = json_encode($data);
+//$userObject = json_encode($data);
+
+//var_dump($userObject); exit;
 
 try {
    
@@ -41,4 +43,4 @@ $payload = [
 
 $token = $app->auth->make($payload);
 
-print '<input type="hidden" name="authToken" id="authToken" value="'.$token.'">';
+print '<input type="hidden" name="authToken" id="authToken" value="'.$token.'" />';

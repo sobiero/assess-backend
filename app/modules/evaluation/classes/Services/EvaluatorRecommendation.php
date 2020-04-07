@@ -27,8 +27,11 @@ class EvaluatorRecommendation
     {
 
 	  $obj->evaluation_id    = $data['evaluation_id'] ;	  
-	  $obj->title            = $data['title'] ;
-	  $obj->description      = $data['description'] ;
+	  $obj->nbr            = $data['nbr'] ;
+	  $obj->priority_id            = $data['priority_id'] ;
+	  $obj->recommendation      = $data['recommendation'] ;
+	  $obj->recommendation_context      = $data['recommendation_context'] ;
+
 	  $obj->by_user_email    = \getUser();
 	  $obj->deleted          = 0;
 

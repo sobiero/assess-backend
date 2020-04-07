@@ -60,6 +60,7 @@ class RecommendationResponsibleEntityMap
 		$obj->responsible_entity_type_id     = $data['responsible_entity_type_id'] ; 
 		$obj->responsible_entity_id          = $responsible_entity_id ;
 		$obj->responsible_entity_name        = $responsible_entity_name ;
+		$obj->date_compliance_expected       = $data['date_compliance_expected'] ;
 
 	    $obj->assigned_date = \date("Y-m-d H:i:s"); 
 		$obj->assigned_by_user_email   = \getUser() ;

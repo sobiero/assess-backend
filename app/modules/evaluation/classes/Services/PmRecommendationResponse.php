@@ -47,8 +47,8 @@ class PmRecommendationResponse
 	public static function upload($data, $app) 
 	{
 
-		$data['title'] = null;
-		$data['description'] = null ;
+		$data['title'] = 'PM Response to Recommendation';
+		$data['description'] = 'PM Response to Recommendation';
 		$data['publication_date'] = null ;
 
 		$data = \Project\Evaluation\Services\Document::upload($data, $app);
