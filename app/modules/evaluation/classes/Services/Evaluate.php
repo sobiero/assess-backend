@@ -5,13 +5,27 @@ namespace Project\Evaluation\Services;
 class Evaluate 
 {
 
-    public static function create($data)
+    public static function create($data, $app = null)
     {
+		//check if already exists
+        $obj = \Project\Evaluation\Models\Evaluation::findFirst(
+		   " project_type_id = " . $data['project_type_id'] 
+	      ." AND evaluation_type_id = " . $data['evaluation_type_id']
+		  ." AND project_id = " . $data['project_id']
+		);
+
+		//if(is_object($obj)){ return $obj; }
 
 		$obj = new \Project\Evaluation\Models\Evaluation();
   	    $obj->date_created           = \date("Y-m-d H:i:s"); 
 
-        return self::save($obj, $data);
+        $obj = self::save($obj, $data);
+
+        if($obj->project_type_id == 1 ){ //If PIMS project
+		  self::saveProjectTeam($obj, $app);
+		}
+
+		return $obj;
 	   
     }
 
@@ -57,5 +71,53 @@ class Evaluate
 	  
     }
 
+	public static function saveProjectTeam($obj, $app)
+	{
+		
+		$team = \file_get_contents("http://staging1.unep.org/simon/pims-stg/modules/main/evaluation-api/projectteam?project_id=". $obj->project_id) ;
+		$team = @\json_decode($team, true);
+
+		//$user_obj = [];
+
+		foreach ( $team as $t){
+			$user_obj = [];
+
+			if($t['status'] != 'former' ){
+
+				switch ($t['role']) {
+				  case 'pm_spv':
+					  $user_obj['role_id'] = 7;
+				  break;
+				  case 'pm':
+					  $user_obj['role_id'] = 8;
+				  break;
+				  case 'fmo':
+					  $user_obj['role_id'] = 9;
+				  break;
+				  default:
+					  $user_obj['role_id'] = 0;
+				}
+
+				list($first_name, $last_name) = explode(" ", $t['fullname'], 2);
+
+				$user_obj['staff_obj'] = \json_encode( [
+					'index_no' => null,
+					'firstname'=> $first_name,
+					'lastname' => $last_name,
+					'unite_id' => null,
+					'email' => $t['email'],
+				] );
+
+				$user_obj['evaluation_id'] = $obj->id ;
+
+				@\Project\Evaluation\Services\User::create($user_obj, $app);
+
+				//var_dump( $user_obj );
+
+			}
+		
+		}
+			
+	}
 
 }

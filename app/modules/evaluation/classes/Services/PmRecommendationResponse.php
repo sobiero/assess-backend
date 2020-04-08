@@ -27,9 +27,9 @@ class PmRecommendationResponse
     {
 
 		$doc = self::upload($data, $app);
-		$obj->evaluator_recommendation_id    = $data['evaluator_recommendation_id'] ;
+		$obj->evaluator_recommendation_id = $data['evaluator_recommendation_id'] ;
 		$obj->accepted = $data['accepted'] ; 
-		$obj->acceptance_rejection_statement      = $data['acceptance_rejection_statement'] ;
+		$obj->acceptance_rejection_statement = $data['acceptance_rejection_statement'] ;
 		$obj->justification = $data['justification'] ;
 		$obj->what_will_be_done = $data['what_will_be_done'] ;
 		$obj->measures_taken = $data['measures_taken'] ;

@@ -363,8 +363,8 @@ $app->post('/evaluation/evaluate', function () use ($app) {
 	  $reqData = \json_decode($_POST['form-data'], true);
 
 	  $data = !empty($reqData['evaluation_id']) ? 
-				    \Project\Evaluation\Services\Evaluate::update($reqData) :
-				    \Project\Evaluation\Services\Evaluate::create($reqData) ;
+				    \Project\Evaluation\Services\Evaluate::update($reqData, $app) :
+				    \Project\Evaluation\Services\Evaluate::create($reqData, $app) ;
            
       $data =['data' => $data , 'error' => null ];
       return sendResponse( 201, $data );

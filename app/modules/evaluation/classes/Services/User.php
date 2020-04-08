@@ -25,6 +25,8 @@ class User
 
 	public static function save($obj, $data, $app)
     {
+
+	  //var_dump($data); exit ;
 	
 	  if($data['role_id'] == 5 || $data['role_id'] == 6 ){
 
