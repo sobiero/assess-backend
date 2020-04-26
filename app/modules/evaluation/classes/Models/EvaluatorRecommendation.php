@@ -56,7 +56,9 @@ class EvaluatorRecommendation extends Base
 					`c`.`original_name` AS `doc_original_name`,
 					`c`.`size_in_bytes` AS `doc_size_in_bytes`,
 					`b`.`pm_user_email` AS `pm_user_email`,
-					`b`.`date_created` AS `response_date_created` 
+					`b`.`date_created` AS `response_date_created`,
+					GROUP_CONCAT(DISTINCT `d`.`responsible_entity_id` SEPARATOR ', ') AS `assigned_entity_ids`,
+					GROUP_CONCAT(DISTINCT `d`.`responsible_entity_name` SEPARATOR ', ') AS `assigned_entity_names`
 				FROM
 					`evm_evaluator_recommendation` `a`
 					LEFT JOIN `evm_pm_recommendation_response` `b` 
@@ -64,6 +66,7 @@ class EvaluatorRecommendation extends Base
 					LEFT JOIN `evm_document` `c` ON (
 					`c`.`id` = `b`.`document_id` 
 					AND `c`.deleted <> 1)
+					LEFT JOIN evm_recommendation_responsible_entity_map d ON (a.id = d.evaluator_recommendation_id AND d.deleted <> 1)
 				WHERE `a`.`deleted` <> 1 AND `a`.`evaluation_id` = " . (int)$evaluationID;
 
 		$result_set = $db->query($sql);

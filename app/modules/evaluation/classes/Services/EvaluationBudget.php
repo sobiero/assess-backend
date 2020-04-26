@@ -45,7 +45,7 @@ class EvaluationBudget
 	  } 
       if ( $data['logged_in_user_role']['id'] === 1 || $data['logged_in_user_role']['id'] === 2 ) {
 	     $obj->estimate_total_eval_cost = $data['estimate_total_eval_cost'] ;
-	     $obj->is_budget_sufficient = $data['is_budget_sufficient'] ;
+	     //$obj->is_budget_sufficient = $data['is_budget_sufficient'] ;
 	     $obj->em_comment = $data['em_comment'] ;
 	
          if($data['logged_in_user_role']['id'] === 2){ 

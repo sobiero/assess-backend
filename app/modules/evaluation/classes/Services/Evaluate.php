@@ -52,6 +52,8 @@ class Evaluate
 
 		$obj->save();
 
+		self::saveEvaluationManager($obj, $data, null);
+
 		return $obj;
 	  
     }
@@ -71,13 +73,21 @@ class Evaluate
 	  
     }
 
+	public static function saveEvaluationManager($obj, $data, $app = null)
+	{
+		$data['role_id']       = 2 ;
+		$data['staff_obj']     = $data['eval_mgr_staff_obj'];
+		$data['evaluation_id'] = $obj->id ;
+
+		@\Project\Evaluation\Services\User::create($data, $app);
+			
+	}
+
 	public static function saveProjectTeam($obj, $app)
 	{
 		
 		$team = \file_get_contents("http://staging1.unep.org/simon/pims-stg/modules/main/evaluation-api/projectteam?project_id=". $obj->project_id) ;
 		$team = @\json_decode($team, true);
-
-		//$user_obj = [];
 
 		foreach ( $team as $t){
 			$user_obj = [];
@@ -111,8 +121,6 @@ class Evaluate
 				$user_obj['evaluation_id'] = $obj->id ;
 
 				@\Project\Evaluation\Services\User::create($user_obj, $app);
-
-				//var_dump( $user_obj );
 
 			}
 		

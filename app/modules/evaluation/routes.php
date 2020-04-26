@@ -67,7 +67,7 @@ $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $sec
             break;
          
          case 'tor':
-            $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 2 AND deleted = 0');
+            $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND FLOOR(belongs_to_menu_item_id) = 2 AND deleted = 0');
             break;   
 
          case 'team':
@@ -79,15 +79,15 @@ $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $sec
             break;  
 			
          case 'inception-report':
-            $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 5 AND deleted = 0');
+            $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND FLOOR(belongs_to_menu_item_id) = 5 AND deleted = 0');
             break;   
 
          case 'draft-evaluation-report':
-            $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 6 AND deleted = 0');
+            $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND FLOOR(belongs_to_menu_item_id) = 6 AND deleted = 0');
             break;   
 
          case 'final-evaluation-report':
-            $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND belongs_to_menu_item_id = 7 AND deleted = 0');
+            $data = \Project\Evaluation\Models\Document::find(' evaluation_id = '. $evaluationId .' AND FLOOR(belongs_to_menu_item_id) = 7 AND deleted = 0');
             break; 
 		
 	     case 'final-evaluation-report-comment':

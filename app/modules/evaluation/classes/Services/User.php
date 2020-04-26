@@ -30,7 +30,7 @@ class User
 	
 	  if($data['role_id'] == 5 || $data['role_id'] == 6 ){
 
-		list($first_name, $last_name) = explode(" ", $data['full_name'], 2);
+		@list($first_name, $last_name) = explode(" ", $data['full_name'], 2);
 	
 		$data['belongs_to_menu_item_id'] = 3;
 
