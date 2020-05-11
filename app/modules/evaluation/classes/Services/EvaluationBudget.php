@@ -17,6 +17,8 @@ class EvaluationBudget
 	public static function update($data)
     {
 
+		//var_dump($data); exit ;
+
 		$obj = \Project\Evaluation\Models\EvaluationBudget::findFirst($data['budget_id']);
         return self::save($obj, $data);
 	   
@@ -44,7 +46,7 @@ class EvaluationBudget
 		  }
 	  } 
       if ( $data['logged_in_user_role']['id'] === 1 || $data['logged_in_user_role']['id'] === 2 ) {
-	     $obj->estimate_total_eval_cost = $data['estimate_total_eval_cost'] ;
+	     $obj->estimate_total_eval_cost = floatval($data['estimate_total_eval_cost']) ;
 	     //$obj->is_budget_sufficient = $data['is_budget_sufficient'] ;
 	     $obj->em_comment = $data['em_comment'] ;
 	

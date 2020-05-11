@@ -14,7 +14,7 @@ class Evaluate
 		  ." AND project_id = " . $data['project_id']
 		);
 
-		//if(is_object($obj)){ return $obj; }
+		if(is_object($obj)){ return $obj; }
 
 		$obj = new \Project\Evaluation\Models\Evaluation();
   	    $obj->date_created           = \date("Y-m-d H:i:s"); 
@@ -60,6 +60,8 @@ class Evaluate
 
 	public static function updateStatus($data)
     {
+       
+	   //var_dump($data);exit;
 
 		$obj = \Project\Evaluation\Models\Evaluation::findFirst($data['evaluation_id']);
 

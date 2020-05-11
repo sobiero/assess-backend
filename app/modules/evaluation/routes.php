@@ -49,6 +49,34 @@ $app->get('/evaluation/user', function () use ($app) {
  
 });
 
+$app->get('/evaluation/logout', function () use ($app) {
+
+   
+
+   try {
+
+	  $auth = $app['auth'];
+
+	  $data = $auth->data();
+
+	  //var_dump($data);
+
+      $data['iat'] = strtotime('-1 day'); 
+
+	  //var_dump($data);
+  
+      $data =['data' => 'Token Expired' , 'error' => null ];
+      return sendResponse( 200, $data );
+
+   } catch (\Exception $er) {
+      
+      $data =['data' => null, 'error' => $er->getMessage()];
+      return sendResponse( 500, $data );
+
+   } 
+ 
+});
+
 
 $app->get('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $section ) use ($app) {
    
@@ -137,6 +165,8 @@ $app->post('/evaluation/{evaluationId}/{section}', function ( $evaluationId, $se
          case 'budget':
 
 			$reqData = \json_decode($_POST['form-data'], true ) ;
+
+			//var_dump( $reqData  ); exit ;
 
    			$data = !empty($reqData['budget_id']) ? 
 				    \Project\Evaluation\Services\EvaluationBudget::update($reqData) :
@@ -273,6 +303,24 @@ $app->get('/evaluation/{evaluationId}/recommendations/{recommendation_id}/assign
 
 });
 
+$app->get('/evaluation/{evaluationId}/recommendations/{recommendation_id}/response/{response_id}/documents', function ( $evaluationId, $recommendation_id, $response_id) use ($app) {
+
+    try {
+
+        $data = null; 
+   		$data =  \Project\Evaluation\Models\PmRecommendationResponseDocumentMap::getDocumentsByEvaluationResponseID($response_id) ;
+
+        $data =['data' => $data , 'error' => null ];
+        return sendResponse( 200, $data );
+
+   } catch (\Exception $er) {
+      
+        $data =['data' => null, 'error' => $er->getMessage()];
+        return sendResponse( 500, $data );
+   } 
+
+});
+
 $app->post('/evaluation/{evaluationId}/recommendations/{recommendation_id}/assignment', function ( $evaluationId, $recommendation_id ) use ($app) {
 
     try {
@@ -362,6 +410,8 @@ $app->post('/evaluation/evaluate', function () use ($app) {
 
 	  $reqData = \json_decode($_POST['form-data'], true);
 
+	  //var_dump($reqData); exit ;
+
 	  $data = !empty($reqData['evaluation_id']) ? 
 				    \Project\Evaluation\Services\Evaluate::update($reqData, $app) :
 				    \Project\Evaluation\Services\Evaluate::create($reqData, $app) ;
@@ -405,7 +455,7 @@ $app->post('/evaluation/document', function () use ($app) {
 
 });
 
-$app->get('/evaluation/document/{id}', function ($id) use ($app) {
+$app->get('/evaluation/document/{id}/download', function ($id) use ($app) {
 
     $doc = \Project\Evaluation\Models\Document::findFirst($id) ;
 
@@ -435,6 +485,26 @@ $app->get('/evaluation/document/{id}', function ($id) use ($app) {
         return sendResponse( 404, $data );
     }
    
+});
+
+
+$app->delete('/evaluation/document/{id}', function ($id) use ($app) {
+
+	 try {
+
+      $doc = Project\Evaluation\Models\Document::findFirst($id);
+	  $doc->delete();
+            
+      $data =['data' => $doc , 'error' => null ];
+      return sendResponse( 202, $data );
+
+   } catch (\Exception $er) {
+      
+      $data =['data' => null, 'error' => $er->getMessage()];
+      return sendResponse( 500, $data );
+
+   } 
+
 });
 
 $app->delete('/evaluation/{evaluationId}/{section}/delete/{record_id}', function ( $evaluationId, $section, $record_id ) use ($app) {

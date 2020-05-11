@@ -30,7 +30,7 @@ class Document
 					$doc->title                   = $data['title'];
 					$doc->description             = $data['description'];
 					$doc->publication_date        = $data['publication_date'];
-					$doc->commenting_due_date     = $data['commenting_due_date'];
+					$doc->commenting_due_date     = @$data['commenting_due_date'];
 
 					$doc->original_name           = $file->getName();
 					$doc->saved_name              = $saved_name ;
@@ -58,10 +58,10 @@ class Document
 
 				$doc = \Project\Evaluation\Models\Document::findFirst($data['doc_id']) ;
 
-				$doc->title                   = $data['title'];
-				$doc->description             = $data['description'];
-				$doc->publication_date        = $data['publication_date'];
-				$doc->commenting_due_date     = $data['commenting_due_date'];
+				$doc->title               = $data['title'];
+				$doc->description         = $data['description'];
+				$doc->publication_date    = $data['publication_date'];
+				$doc->commenting_due_date = @$data['commenting_due_date'];
 
 				$doc->save();
 			
