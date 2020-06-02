@@ -12,6 +12,7 @@ class Evaluate
 		   " project_type_id = " . $data['project_type_id'] 
 	      ." AND evaluation_type_id = " . $data['evaluation_type_id']
 		  ." AND project_id = " . $data['project_id']
+		  ." AND deleted <> 1 "
 		);
 
 		if(is_object($obj)){ return $obj; }
@@ -39,6 +40,7 @@ class Evaluate
 
 	public static function save($obj, $data)
     {
+		//var_dump($data); exit;
 
 		$obj->project_type_id    = $data['project_type_id'] ;
 		$obj->evaluation_type_id = $data['evaluation_type_id'] ; 
@@ -47,21 +49,26 @@ class Evaluate
 
 		$obj->project_start_date = $data['project_start_date'] ;
 		$obj->project_end_date   = $data['project_end_date'] ;
+		$obj->evaluand_comments  = $data['evaluand_comments'] ;
 		$obj->created_by_email   = \getUser() ;
 		$obj->deleted            = 0;
 
 		$obj->save();
+		
+		if(!empty($data['eval_mgr_staff_obj'])){
 
-		self::saveEvaluationManager($obj, $data, null);
-
+		    self::saveEvaluationManager($obj, $data, null);
+		
+		}
+		
 		return $obj;
-	  
+	
     }
 
 	public static function updateStatus($data)
     {
        
-	   //var_dump($data);exit;
+	    //var_dump($data);exit;
 
 		$obj = \Project\Evaluation\Models\Evaluation::findFirst($data['evaluation_id']);
 

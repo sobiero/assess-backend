@@ -38,7 +38,7 @@ class Document
 					$doc->size_in_bytes           = $file->getSize();
 					$doc->upload_by_user_email    = getUser();
 
-					$doc->save();
+                    $doc->save();
 
 					$docs[$x] = $doc ;
 

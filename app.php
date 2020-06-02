@@ -1,6 +1,6 @@
 <?php
 
-$app->get('/evaluation/ext-url', function () use ($app) {
+$app->get('/assess/ext-url', function () use ($app) {
 
 	 $response = new \Phalcon\Http\Response();
 
@@ -16,7 +16,7 @@ $app->get('/evaluation/ext-url', function () use ($app) {
  
 });
 
-include APP_PATH . "/modules/evaluation/routes.php" ;
+include APP_PATH . "/modules/assess/routes.php" ;
 
 function sendResponse($code, $data)
 {

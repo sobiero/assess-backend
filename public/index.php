@@ -16,11 +16,11 @@ try {
     
     include APP_PATH . '/../app.php';
 
-	$auth = new \EmoG\Phalcon\Auth\Middleware\Micro($app, (array)$config->jwt );
+	//$auth = new \EmoG\Phalcon\Auth\Middleware\Micro($app, (array)$config->jwt );
 
     $app->handle();
 
 } catch (\Exception $e) {
     
-	//echo $e->getMessage(); 
+	echo $e->getMessage(); exit;
 }

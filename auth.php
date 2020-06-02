@@ -1,18 +1,23 @@
 <?php
 define('APP_PATH', realpath('../api/app'));
+date_default_timezone_set('UTC');
 
 use Phalcon\Mvc\Micro;
 use Phalcon\Di\FactoryDefault;
 
-require_once( '/root/public_html/simplesaml/lib/_autoload.php' );
+//require_once( '/var/www/html/simplesaml/lib/_autoload.php' );
 	
-$saml = new \SimpleSAML\Auth\Simple('default-sp');
-$saml->requireAuth();
-$data = $saml->getAttributes();
+//$saml = new \SimpleSAML\Auth\Simple('default-sp');
+//$saml->requireAuth();
+//$data = $saml->getAttributes();
 
 //$userObject = json_encode($data);
 
 //var_dump($userObject); exit;
+
+$data['uniteid'][0] = "smogaka"; 
+$data['email'][0] = "simon.mogaka@un.org";
+$data['fullname'][0] = "Simon Mogaka";
 
 try {
    
@@ -22,9 +27,9 @@ try {
 
     $app = new Micro($di);
 
-	$auth = new \EmoG\Phalcon\Auth\Middleware\Micro($app, (array)$config->jwt );
+	//$auth = new \EmoG\Phalcon\Auth\Middleware\Micro($app, (array)$config->jwt );
 
-	$di['auth'] = $auth ;
+	//$di['auth'] = $auth ;
 
     $app->handle();
 

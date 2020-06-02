@@ -56,7 +56,29 @@ class User
 
 		return ['user'=>$obj, 'role'=>$role];
 
-	  } else {
+	  } else if ( $data['role_id'] == 12 ){ //Project Team Others
+		  
+		@list($first_name, $last_name) = explode(" ", $data['full_name'], 2);
+		$doc = self::upload($data, $app);
+		$obj->first_name           = $first_name;
+		$obj->last_name            = $last_name ;
+
+		$obj->alt_email            = $data["email"] ;
+		
+		$obj->created_by_email     = \getUser();
+		$obj->deleted              = 0;
+		$obj->save();
+		
+		$role = new \Project\Evaluation\Models\EvaluationUserRoleMap();
+		$role->evaluation_id =  $data['evaluation_id'] ;	 
+		$role->user_id       =  $obj->id ;	 
+		$role->role_id       =  $data['role_id'] ;
+		$role->save();
+
+		return ['user'=>$obj, 'role'=>$role];
+		  
+		  
+	  }  else {  //UN Staff
 
 		$staff = \json_decode($data['staff_obj'], true);
 
