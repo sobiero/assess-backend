@@ -1,7 +1,6 @@
 <?php
 
-
-$app->get('/evaluation/ext-url', function () use ($app) {
+$app->get('/assess/ext-url', function () use ($app) {
 
 	 $response = new \Phalcon\Http\Response();
 
@@ -17,7 +16,7 @@ $app->get('/evaluation/ext-url', function () use ($app) {
  
 });
 
-include APP_PATH . "/modules/evaluation/routes.php" ;
+include APP_PATH . "/modules/assess/routes.php" ;
 
 function sendResponse($code, $data)
 {
@@ -60,7 +59,7 @@ function sendResponse($code, $data)
         503 => 'Service Unavailable',
         504 => 'Gateway Time-out',
         505 => 'HTTP Version not supported',
-    ];
+    ]; 
 
     $response = new \Phalcon\Http\Response();
     
@@ -77,8 +76,6 @@ function sendResponse($code, $data)
     return $response->send();
  
 }
-
-
 
 function getAuthorizationHeader(){
         $headers = null;
@@ -104,7 +101,7 @@ function getAuthorizationHeader(){
             }
         }
         return $headers;
-    }
+ }
 /**
  * get access token from header
  * */
@@ -119,10 +116,15 @@ function getBearerToken() {
     return null;
 }
 
-function getUser(){
-   $bearer = getBearerToken();
-   $data = \json_decode($bearer, true);
-   return @$data['user'];
+function getUser() {
+
+	$di = \Phalcon\DI::getDefault();
+
+	return $di['auth']->data('email') ;
+
+   // $bearer = getBearerToken();
+   // $data = \json_decode($bearer, true);
+   // return @$data['user'];
 }
 function getToken(){
    $bearer = getBearerToken();
