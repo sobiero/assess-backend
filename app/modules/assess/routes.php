@@ -9,7 +9,6 @@ $app->get('/assess', function () use ($app) {
  
 });
 
-
 $app->get('/assess/var', function () use ($app) {
 	
 	$data = \Simon\Assess\Models\Variable::find();
