@@ -1,19 +1,13 @@
 <?php
 
-namespace Project\Evaluation\Models;
+namespace Simon\Assess\Models;
 
-class RefProjectType extends Base
+class Variable extends Base
 {
 	public function getSource()
     {
-        return 'evm_ref_project_type'; 
+        return 'variable'; 
     }
-
-    public function initialize()
-    {
-	   
-    }
-
 	public static function find($parameters = null)
     {
         return parent::find($parameters);

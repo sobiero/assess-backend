@@ -1,6 +1,6 @@
 <?php
 
-namespace Project\Evaluation\Models;
+namespace Simon\Assess\Models;
 
 use \Phalcon\Mvc\Model\Resultset\Simple as Resultset;
 use \Phalcon\Mvc\Model\Query;
